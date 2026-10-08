@@ -1,0 +1,11 @@
+{
+  "rules": {
+    "rooms": {
+      "$room": {
+        ".read": "auth != null && $room.matches(/^[A-HJ-NP-Z2-9]{20}$/)",
+        ".write": "auth != null && $room.matches(/^[A-HJ-NP-Z2-9]{20}$/) && newData.exists()",
+        ".validate": "newData.hasChildren(['seed','round','reroll','light','distance','difficulty','minutes','timer','version']) && newData.child('version').val() === 3 && newData.child('seed').isString() && newData.child('seed').val().matches(/^[A-HJ-NP-Z2-9]{6}$/) && newData.child('round').isNumber() && newData.child('round').val() >= 1 && newData.child('round').val() <= 9999 && newData.child('reroll').isNumber() && newData.child('reroll').val() >= 0 && newData.child('reroll').val() <= 50 && newData.child('minutes').isNumber() && newData.child('minutes').val() >= 2 && newData.child('minutes').val() <= 5"
+      }
+    }
+  }
+}
