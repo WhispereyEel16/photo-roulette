@@ -1,0 +1,66 @@
+PHOTO ROULETTE — Auckland Domain
+FINAL v2.0 | Phone-friendly camera challenge
+
+WHAT YOU GET
+index.html             The actual app (can work alone)
+manifest.webmanifest   Lets compatible browsers install it as an app
+sw.js                  Saves the website for offline use after the first online visit
+icon-192.png           Home screen icon
+icon-512.png           Home screen icon
+
+RECOMMENDED SETUP: ONE LINK FOR BOTH PHONES (FREE)
+1. On a laptop or phone, sign in at https://github.com (free account).
+2. Click + > New repository. Name it: photo-roulette
+3. Choose PUBLIC, then Create repository.
+4. In the repository select Add file > Upload files.
+5. Upload ALL FIVE files listed above. Do not upload the ZIP or put the files in a folder.
+6. Select Commit changes.
+7. Open Settings > Pages.
+8. Under Build and deployment, choose Deploy from a branch.
+9. Choose main and /(root), then Save. Wait until your site is published.
+10. Your link is normally: https://YOUR-USERNAME.github.io/photo-roulette/
+11. Open that link on both phones. On Android Chrome, open menu (three dots)
+    and choose Add to Home screen or Install app (label differs by device).
+
+The site is publicly viewable, but it has no user accounts and does not
+publish your photos, challenge history or phone location.
+
+ALTERNATIVE: USE JUST ONE FILE
+Download index.html to both phones. Open each copy in a mobile browser.
+Some phones do not open local HTML files in a browser. If this happens,
+use the GitHub Pages steps above; you do not need to edit any code.
+
+HOW TWO PEOPLE PLAY THE SAME SESSION
+1. Open the app on one phone, then choose Play together.
+2. Tap Share session or Copy session code.
+3. On the other phone, open the same app and paste the code into Join.
+4. Both phones now start at round 1 with the same movements and photo prompts.
+5. Tap Next mission on BOTH phones to reveal the same new round.
+   The phones do not send live updates to each other: each must tap Next.
+6. If one gets ahead, use Previous to get back to the same round.
+7. To join the exact current mission instead, use Share mission / mission code.
+
+HOW TO USE
+- Choose lighting (Mixed, Bright sun, Overcast, or Low light).
+- Choose walking distance (Short, Standard, or Explorer).
+- Choose challenge level (Gentle, Balanced, Wild card).
+- Begin somewhere safe on a public path inside Auckland Domain.
+- Follow the angle approximately ON THE AVAILABLE PATHS. NEVER walk in a
+  straight line through water, road traffic, gardens or barriers.
+- Take the specified steps; at the end, photograph something nearby.
+- Start the 2, 3 or 5 minute timer to limit your shooting time.
+- Use Reroll photo if conditions make the subject/framing challenge impossible.
+- Tap Mark complete; your progress is stored in that phone's browser.
+
+PRIVACY + LIMITATIONS
+No photo uploads, logins, GPS tracking, accounts, third-party scripts or
+advertisements. History is local to each browser and can be wiped if browser
+data is cleared or private browsing is used.
+The two phones use matching random seeds, not live synchronization.
+The website needs internet the first time it opens. After installation and
+an initial online visit, the installed PWA can work offline on supported
+browsers. Sending session links requires a connection; mission codes can
+be shared by any means.
+
+Need to update? Replace the FIVE site files in the GitHub repo; visitors
+will receive the new version once the page and offline cache refresh.
