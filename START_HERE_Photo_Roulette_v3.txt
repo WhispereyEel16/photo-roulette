@@ -1,0 +1,85 @@
+PHOTO ROULETTE v3.0 — AUCKLAND DOMAIN + LIVE DUO
+===============================================
+A creative photography challenge for 2 phones. You already have the v2 website on GitHub Pages. This replaces it without changing your GitHub Pages link.
+
+WHAT WORKS BEFORE FIREBASE SETUP?
+- Everything in Solo mode and Matching Codes mode: movements, challenges, light filters, timer, local history, offline use.
+- The Live Duo button is visible but says "not configured". That's expected.
+
+WHAT LIVE DUO SYNC INCLUDES
+- Next mission / Previous mission
+- Rerolling photo restrictions (route stays unchanged)
+- Lighting, walking distance, challenge difficulty and timer duration
+- Starting, pausing and resetting the same timer (roughly synchronized, based on phone clocks)
+- Completed missions and the completion history
+All changes appear on both phones while online in the same live room. Last setting edit wins; simultaneous Next taps advance two rounds. The apps DO NOT send or synchronize photos or GPS.
+
+PART A — DO THIS ONCE ON YOUR LAPTOP
+====================================
+1. Go to https://console.firebase.google.com/ and choose Create project. The Spark/free plan is enough for a two-person app.
+2. Name the project, e.g. "photo-roulette-live". Google Analytics is optional and can be disabled.
+3. In Project Overview, choose Add app > Web (</>). Register an app with any nickname. You DO NOT need Firebase Hosting — keep GitHub Pages.
+4. Open Build > Authentication > Get started > Sign-in method > Anonymous > Enable > Save.
+5. Open Build > Realtime Database > Create Database. Choose an available region; select LOCKED MODE (not public Test mode). Create the database.
+6. Within Realtime Database open Rules. Open the included file firebase-rules.json on your laptop, select all, copy, and REPLACE the entire existing rules in Firebase. Click Publish.
+7. Open Project settings (gear next to Project Overview) > Your apps > your Web app > SDK setup and configuration > Config. Copy the values for apiKey, authDomain, projectId, and appId.
+8. Open firebase-config.js in Notepad or VS Code. Replace the PASTE_... placeholders with the actual values from the Firebase Web config. Keep quotation marks and commas.
+9. In Realtime Database > Data, find and copy the Database URL (it begins https:// and ends in firebasedatabase.app or firebaseio.com). Paste into databaseURL in firebase-config.js.
+10. Save firebase-config.js. DO NOT paste a Firebase Admin SDK private key, service-account JSON, or any password into the file. The normal PUBLIC Web app config is safe to publish when you use the provided database rules.
+
+PART B — UPDATE YOUR EXISTING GITHUB PAGES SITE
+===============================================
+1. Sign in to github.com and open your current `photo-roulette` repository.
+2. Choose Add file > Upload files.
+3. Upload ALL SEVEN website files (exact names):
+     index.html
+     live-sync.js
+     firebase-config.js   <-- the ONE you edited above
+     sw.js
+     manifest.webmanifest
+     icon-192.png
+     icon-512.png
+   Do NOT upload firebase-rules.json, this text guide, the ZIP file, tests, or patch scripts to your website.
+4. Click Commit changes (the same file names will replace the old version).
+5. Open your SAME existing GitHub Pages URL. Refresh (possibly twice), and close/reopen the Home Screen app if needed. The new version says LIVE DUO — automatic two-phone syncing.
+6. If you see the old page, clear this site's cached data or uninstall and reinstall the home-screen shortcut. The service worker cache is updated to v3.
+
+PART C — PLAY WITH MUM
+======================
+1. Both phones open the same GitHub Pages link and have Wi-Fi/mobile data.
+2. You tap "LIVE DUO — automatic two-phone syncing" > "Create live room".
+3. Tap "Share live invite" and send your mum the link via WhatsApp or other message.
+4. She opens the link. She should automatically join your live room. If not, she can type/paste the room's 20-character private code into "Join".
+5. The top badge on both phones should say "LIVE DUO · CONNECTED".
+6. Test: On your phone tap "Next mission". On her phone it should change to the SAME mission without tapping anything. Then she can tap "Reroll photo" and YOUR challenge updates. Test the timer too.
+7. If you separate, close and reopen the app later. It remembers the last joined room on that phone.
+8. To play independently again, tap "Leave live room (return to solo)". Your earlier solo session is restored.
+
+TROUBLESHOOTING
+===============
+- "Live Duo not configured yet": You haven't edited + uploaded firebase-config.js, or it is still cached. Do steps 7-10 in Part A, then re-upload and reload.
+- "Database access denied": Check the exact firebase-rules.json was pasted into Realtime Database > Rules AND published.
+- "Turn on Anonymous sign-in": Build > Authentication > Sign-in method > Anonymous > Enable.
+- "Check the database URL": Use the URL from Realtime Database > Data, not the Firebase Console URL.
+- "Room not found": Check that both users are visiting the same website/backend, and copy the full live invitation (20 characters; dashes and spaces allowed).
+- "RECONNECTING": Live mode needs Wi-Fi/mobile data. Solo mode still works without it. Reconnect before editing shared missions.
+- One phone changes, the other doesn't: Check that both badges say CONNECTED and that both phones show the same 20-character live room code, not the short offline session code.
+- Timer seconds don't match exactly: Device clock differences and network delay can cause small timing differences. Both use the same intended end time.
+- Stuck on old screen: Hard refresh or clear the app site's storage (this can erase solo history), or reinstall the Home Screen app.
+
+PRIVACY / LIMITS
+===============
+GitHub Pages makes the APP CODE public, but not your photos or browser-only solo history. In Live Duo, the shared seed, round, settings, timer and completion history are stored in Firebase; photos and device positions are not uploaded. The 20-character private room code acts as an invitation key. Anyone with the code can edit that room, so share it privately. Each phone signs in anonymously to Firebase (no personal account required). No monthly payment is expected for two people within the Spark plan's free limits. A live internet connection is required for automatic updates. Firebase security rules are important; do not switch your database into unrestricted Test mode.
+
+CHALLENGE FEATURES
+==================
+Light: Mixed/unsure, Bright sun, Overcast/soft, Low light.
+Movement: Short (1 leg of 13-48 steps), Standard (1-2 legs of 24-86 steps), Explorer (2-3 legs of 49-140 steps).
+Turn angle: 0°, 15°, 30°, 45°, 60°, 75°, 90°, 120°, 135°, 150° or 180°, left or right as appropriate.
+Creativity: Gentle / Balanced / Wild card.
+Photo challenge: 1 subject rule + 1 composition rule + 1 lighting rule. Wild card adds a twist.
+Timer: 2 / 3 / 5 minutes, Start/Pause/Reset.
+Navigation: Follow a path, NOT a literal off-track bearing; at finish shoot something nearby (about 8 m).
+History: Mark complete, review recent missions, copy log.
+Offline Matching Codes (PR2S-) are identical, deterministic challenges on each phone but NOT automatically synced.
+Live Duo uses a DIFFERENT 20-character room code, and is automatically synced while online.
