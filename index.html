@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111817">
+  <meta name="description" content="A pocket photography scavenger hunt for Pukekawa / Auckland Domain. Walk, look closely, make a photograph.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <title>Photo Roulette — Auckland Domain</title>
+  <style>
+    :root { color-scheme: dark; --bg:#101716; --panel:#1b2522; --panel2:#26322d; --text:#f5f1e8; --sub:#b2bcb5; --line:#3a4640; --accent:#dbe69a; --orange:#ffc28f; --soft:#899a90; --r:22px; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; -webkit-font-smoothing:antialiased; }
+    button,input,select { font:inherit; }
+    button { cursor:pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+    main { max-width:660px; margin:0 auto; padding:26px 16px calc(34px + env(safe-area-inset-bottom)); }
+    .kicker { display:flex; align-items:center; gap:10px; text-transform:uppercase; letter-spacing:.16em; font-size:11px; color:var(--accent); font-weight:800; }
+    .mark { width:31px; height:31px; border-radius:9px; background:var(--accent); color:var(--bg); display:grid; place-items:center; font-size:14px; font-weight:900; letter-spacing:-.07em; }
+    h1 { margin:14px 0 6px; line-height:1.02; letter-spacing:-.055em; font-size:clamp(38px,9vw,58px); font-weight:800; }
+    h1 em { color:var(--accent); font-weight:400; font-family:Georgia,serif; }
+    p { margin:0; }
+    .lead { max-width:490px; color:var(--sub); line-height:1.55; font-size:14px; }
+    .pillbar { margin:19px 0 13px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .pill { border:1px solid var(--line); background:var(--panel); border-radius:50px; padding:8px 12px; color:var(--sub); font-size:12px; font-weight:650; }
+    .pill strong { color:var(--text); font-variant-numeric:tabular-nums; }
+    .setup { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0 15px; }
+    .setting { border:1px solid var(--line); background:var(--panel); border-radius:14px; padding:10px 12px; min-width:0; }
+    .setting label { display:block; color:var(--soft); font-size:10px; letter-spacing:.12em; font-weight:850; text-transform:uppercase; margin-bottom:4px; }
+    select { appearance:none; -webkit-appearance:none; width:100%; color:var(--text); background:transparent; border:0; padding:3px 21px 3px 0; font-weight:700; font-size:14px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23dbe69a' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-size:16px; background-position:right center; background-repeat:no-repeat; }
+    select option { background:#19231f; color:white; }
+    .mission { background:var(--panel); border:1px solid #53634f; border-radius:var(--r); padding:18px; box-shadow:0 18px 48px #00000020; }
+    .missiontop { display:flex; justify-content:space-between; align-items:center; gap:12px; border-bottom:1px solid var(--line); padding-bottom:13px; }
+    .eyebrow { font-weight:900; text-transform:uppercase; font-size:10px; letter-spacing:.17em; color:var(--accent); }
+    .tag { font-size:11px; color:var(--sub); border:1px solid var(--line); border-radius:30px; padding:6px 10px; }
+    .movement-label { margin-top:17px; font-size:11px; font-weight:850; color:var(--soft); text-transform:uppercase; letter-spacing:.13em; }
+    .move { display:grid; grid-template-columns:50px 1fr; gap:10px; padding:13px 0; align-items:center; border-bottom:1px solid #35443b; }
+    .move:last-child { border:0; }
+    .legnum { width:39px; height:39px; border-radius:13px; background:var(--panel2); color:var(--accent); display:grid; place-items:center; font-weight:850; font-size:12px; }
+    .stepline { font-size:clamp(24px,7vw,33px); font-weight:900; letter-spacing:-.04em; line-height:1.15; }
+    .stepline span { font-size:14px; font-weight:550; color:var(--sub); letter-spacing:0; }
+    .dirline { color:var(--orange); font-size:14px; margin-top:4px; font-weight:650; line-height:1.3; }
+    .instruction { font-size:12px; color:var(--sub); line-height:1.4; padding:10px 0 0; }
+    .limits { display:grid; gap:9px; margin:16px 0 10px; }
+    .limit { background:#121c19; border-radius:14px; padding:13px; display:grid; grid-template-columns:58px 1fr; align-items:start; gap:10px; }
+    .limit .title { color:var(--accent); font-size:10px; letter-spacing:.11em; font-weight:900; text-transform:uppercase; padding-top:3px; }
+    .limit .value { font-size:14px; line-height:1.4; font-weight:580; }
+    .bonus { border:1px dashed #657c62; background:#273629; }
+    .bonus .title { color:var(--orange); }
+    .timerbox { display:grid; grid-template-columns:1fr auto; align-items:center; gap:9px; margin-top:14px; padding:12px; background:#28342d; border-radius:14px; }
+    .timerline { font-weight:900; font-size:25px; letter-spacing:.02em; font-variant-numeric:tabular-nums; line-height:1; }
+    .timerhelp { color:var(--sub); font-size:11px; margin-top:5px; }
+    .timeractions { display:flex; gap:7px; align-items:center; }
+    button.btn { background:var(--panel2); color:var(--text); border:1px solid var(--line); border-radius:12px; padding:11px 14px; font-weight:800; font-size:13px; min-height:43px; }
+    button.btn:active { transform:scale(.985); }
+    button.btn.primary { background:var(--accent); color:#121a13; border-color:var(--accent); }
+    button.btn.compact { padding:9px 11px; min-height:38px; }
+    .actions { display:grid; grid-template-columns:1.4fr 1fr; gap:9px; margin:12px 0 0; }
+    .actions .btn { font-size:14px; min-height:49px; }
+    .rowactions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:8px; }
+    .rowactions .btn { padding:10px 7px; }
+    details { margin-top:14px; background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:0 15px; }
+    summary { list-style:none; cursor:pointer; padding:15px 0; font-size:14px; font-weight:800; display:flex; align-items:center; justify-content:space-between; }
+    summary::-webkit-details-marker { display:none; }
+    summary::after { content:'＋'; font-size:22px; font-weight:350; color:var(--accent); }
+    details[open] summary::after { content:'−'; }
+    .detailbody { padding:0 0 16px; color:var(--sub); font-size:13px; line-height:1.55; }
+    .label { font-size:10px; font-weight:850; color:var(--soft); letter-spacing:.14em; text-transform:uppercase; margin:13px 0 6px; }
+    .sharegrid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .sharegrid .btn { width:100%; }
+    input[type=text] { background:#0f1815; border:1px solid var(--line); border-radius:10px; min-width:0; padding:12px; color:var(--text); font-size:13px; width:100%; }
+    .join { display:grid; grid-template-columns:1fr auto; gap:8px; }
+    .join .btn { white-space:nowrap; }
+    .code { padding:11px 12px; font-size:15px; font-weight:850; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing:.06em; color:var(--accent); border:1px dashed var(--line); border-radius:10px; overflow-wrap:anywhere; }
+    .history { list-style:none; margin:6px 0 2px; padding:0; display:grid; gap:7px; }
+    .history li { border-top:1px solid var(--line); padding:10px 0; font-size:12px; }
+    .history strong { color:var(--text); }
+    .subtle { font-size:12px; color:var(--sub); line-height:1.55; }
+    .notice { border-left:3px solid var(--accent); padding:9px 12px; background:#26352b; border-radius:0 12px 12px 0; margin:10px 0; }
+    .micro { color:var(--soft); font-size:11px; margin-top:6px; line-height:1.5; }
+    .minihead { display:flex; align-items:baseline; justify-content:space-between; gap:6px; }
+    .minihead .movement-label { margin-top:17px; }
+    .minicount { color:var(--sub); font-size:11px; }
+    .btn:disabled { opacity:.44; cursor:not-allowed; }
+    .seperator { height:1px; background:var(--line); margin:13px 0; }
+    .footer { color:var(--soft); font-size:11px; text-align:center; margin-top:22px; line-height:1.5; }
+    .toast { position:fixed; bottom:calc(23px + env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%) translateY(16px); opacity:0; pointer-events:none; transition:.2s; padding:11px 16px; border:1px solid var(--line); background:#edf3d1; color:#17221a; border-radius:30px; font-size:13px; font-weight:800; width:max-content; max-width:90%; text-align:center; box-shadow:0 10px 30px #0007; z-index:4; }
+    .toast.on { opacity:1; transform:translateX(-50%) translateY(0); }
+    @media(min-width:520px) { main { padding:36px 25px 45px; } .setup {grid-template-columns:repeat(3,1fr)} .mission {padding:24px;} }
+    @media(max-width:360px) { .actions {grid-template-columns:1fr} .sharegrid {grid-template-columns:1fr;} .dirline {font-size:13px} .limit {grid-template-columns:48px 1fr} .rowactions .btn {font-size:12px} }
+    @media(prefers-reduced-motion:reduce) { *,*:before,*:after { transition:none !important; scroll-behavior:auto!important; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="kicker"><span class="mark">PR</span> Pukekawa / Auckland Domain</div>
+    <h1>PHOTO <em>roulette.</em></h1>
+    <p class="lead">Random steps. Unexpected directions. One photograph from wherever you end up. Made for two curious photographers.</p>
+  </header>
+
+  <div class="pillbar"><div class="pill">ROUTE CODE <strong id="session">——</strong></div><div class="pill">COMPLETED <strong id="completeCount">0</strong></div></div>
+
+  <section class="setup" aria-label="Challenge settings">
+    <div class="setting"><label for="light">Lighting</label><select id="light"><option value="M">Mixed / unsure</option><option value="S">Bright sun</option><option value="O">Overcast / soft</option><option value="L">Low light</option></select></div>
+    <div class="setting"><label for="distance">Movement</label><select id="distance"><option value="Q">Short walk</option><option value="N" selected>Standard walk</option><option value="E">Explorer walk</option></select></div>
+    <div class="setting"><label for="difficulty">Creativity</label><select id="difficulty"><option value="G">Gentle</option><option value="B" selected>Balanced</option><option value="W">Wild card</option></select></div>
+  </section>
+
+  <section class="mission" aria-labelledby="missionTitle">
+    <div class="missiontop"><div class="eyebrow" id="missionTitle">Mission 01</div><div class="tag" id="missionTag">READY TO WALK</div></div>
+    <div class="minihead"><div class="movement-label">01 / Your route</div><span class="minicount" id="totalSteps"></span></div>
+    <div id="movements" aria-live="polite"></div>
+    <p class="instruction">Face along your current path. Each turn is relative to the direction you are facing. Approximate the turn using existing paths; if none matches, stay on the path. Never cross a road, water, planting or a barrier for the game.</p>
+    <div class="movement-label">02 / Your photograph</div>
+    <div class="limits" id="limits" aria-live="polite"></div>
+    <div class="timerbox">
+      <div><div class="timerline" id="clock" aria-live="off">03:00</div><p class="timerhelp">Time to find and capture the shot</p></div>
+      <div class="timeractions"><button class="btn compact" id="timerToggle">Start</button><button class="btn compact" id="timerReset" aria-label="Reset timer">↺</button></div>
+    </div>
+    <div class="actions"><button class="btn primary" id="newMission">↻ Next mission</button><button class="btn" id="done">✓ Mark complete</button></div>
+    <div class="rowactions"><button class="btn" id="previous">← Previous</button><button class="btn" id="reroll">↻ Reroll photo</button><button class="btn" id="share">↗ Share mission</button><button class="btn" id="revealCode">♧ Play together</button></div>
+  </section>
+
+  <details id="shareDetails">
+    <summary>Play together — two phones</summary>
+    <div class="detailbody">
+      <div class="notice"><strong>Best for you + Mum:</strong> Share the <em>session</em> code once. Open it on both phones, then each press Next when ready. Because the missions are generated from the same code, you'll get identical routes and photo prompts for each round — without mobile data or live syncing.</div>
+      <div class="label">A / Same adventure — session code</div><div class="code" id="sessionCode">—</div>
+      <div class="sharegrid" style="margin-top:9px"><button class="btn" id="copySession">Copy session code</button><button class="btn" id="shareSession">Share session</button></div>
+      <p class="micro">Both phones begin on round 1 with matching settings. Changing settings on one phone will not change the other phone automatically. Use Previous / Next to keep your round numbers aligned.</p>
+      <div class="seperator"></div>
+      <div class="label">B / Exactly this one mission</div><div class="code" id="missionCode">—</div>
+      <div class="sharegrid" style="margin-top:9px"><button class="btn" id="copyCode">Copy mission code</button><button class="btn" id="copyLink">Copy mission link</button></div>
+      <div class="label">Enter a shared session or mission code</div>
+      <div class="join"><input type="text" autocomplete="off" autocapitalize="characters" id="joinCode" placeholder="Paste shared code" aria-label="Session or mission code"><button class="btn primary" id="joinButton">Join</button></div>
+      <p class="micro">If someone sends you a whole message, copy only the code starting with PR2.</p>
+      <div class="label">Start your own adventure</div>
+      <button class="btn" id="freshSession">New independent session</button>
+      <p class="subtle" style="margin-top:10px">Link-sharing works from the online website. Opening a local file? Use codes instead. No accounts, location tracking or live connection needed.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Rules & photography tips</summary>
+    <div class="detailbody">
+      <p><strong>1.</strong> Start from any public path in Auckland Domain. Good starting areas: Duck Ponds, Museum grounds or the paths near Wintergardens. Follow the route cards safely. Once you reach the end, find a subject within about 8 metres.</p>
+      <p style="margin-top:9px"><strong>2.</strong> Spend up to three minutes finding a subject. Move a little to adjust your framing, but don't go searching for a new location.</p>
+      <p style="margin-top:9px"><strong>3.</strong> Try to satisfy the subject, framing and lighting restrictions. If a mission becomes impossible, reroll the photo prompts but keep your walk. Each person can create a different image from the same challenge.</p>
+      <p style="margin-top:9px"><strong>4.</strong> Paths first: never walk into roads, water, garden beds or restricted areas. Stop walking before checking the screen. Don't photograph strangers up close without permission. Wintergardens and managed areas have opening hours.</p>
+      <p style="margin-top:9px"><strong>Low light?</strong> Find a brighter edge, steady your camera and raise ISO as needed. Never enter dark or unsafe areas just to satisfy the prompt. Adjust Lighting above and regenerate the photo restrictions.</p>
+      <div class="label">Timer duration</div><select id="timerMinutes" aria-label="Timer duration"><option value="2">2 minutes</option><option value="3" selected>3 minutes</option><option value="5">5 minutes</option></select>
+    </div>
+  </details>
+
+  <details>
+    <summary>Completed missions</summary>
+    <div class="detailbody"><p class="subtle">Completion is saved in this device's browser. Photos stay in your camera gallery.</p><ul class="history" id="history"></ul><button class="btn" id="exportHistory">Copy completion log</button></div>
+  </details>
+  <footer class="footer">Made for creative wandering · No tracking, account, location permissions or photo uploads required.</footer>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(() => {
+  'use strict';
+  const STORAGE='photo-roulette-auckland-v2';
+  const qs=(x)=>document.getElementById(x);
+  const pick=(a,r)=>a[Math.floor(r()*a.length)];
+  const rngFrom=(str)=>{ let h=2166136261; for(let i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=Math.imul(h,16777619); } return ()=>{ h+=0x6D2B79F5; let t=h; t=Math.imul(t^(t>>>15),t|1); t^=t+Math.imul(t^(t>>>7),t|61); return ((t^(t>>>14))>>>0)/4294967296; }; };
+  const randInt=(min,max,r)=>Math.floor(r()*(max-min+1))+min;
+  const newSeed=()=>{ const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<6;i++){let a=new Uint32Array(1);if(window.crypto?.getRandomValues) window.crypto.getRandomValues(a);s+=chars[(window.crypto?.getRandomValues?a[0]:Math.floor(Math.random()*10000))%chars.length];}return s; };
+  const BASE={seed:newSeed(),round:1,reroll:0,light:'M',distance:'N',difficulty:'B',minutes:3,history:[]};
+  let state={...BASE};
+  try {const saved=JSON.parse(localStorage.getItem(STORAGE)); if(saved && /^[A-HJ-NP-Z2-9]{6}$/.test(saved.seed)) state={...BASE,...saved,history:Array.isArray(saved.history)?saved.history.slice(0,60):[]};} catch(e){}
+  const valid=['M','S','O','L'], dvalid=['Q','N','E'], cvalid=['G','B','W'];
+  if(!valid.includes(state.light))state.light='M';
+  if(!dvalid.includes(state.distance))state.distance='N';
+  if(!cvalid.includes(state.difficulty))state.difficulty='B';
+  if(![2,3,5].includes(state.minutes))state.minutes=3;
+  if(!Number.isInteger(state.round)||state.round<1||state.round>9999)state.round=1;
+  if(!Number.isInteger(state.reroll)||state.reroll<0||state.reroll>50)state.reroll=0;
+  const missionCode=()=>`PR2-${state.seed}-${String(state.round).padStart(3,'0')}-${state.reroll}-${state.light}-${state.distance}-${state.difficulty}`;
+  const sessionCode=()=>`PR2S-${state.seed}-${state.light}-${state.distance}-${state.difficulty}`;
+  function importMission(code) {
+    const compact=String(code).trim().toUpperCase().replace(/\s/g,'');
+    const m=compact.match(/^PR2-([A-HJ-NP-Z2-9]{6})-(\d{1,4})-(\d{1,2})-([MSOL])-([QNE])-([GBW])$/);
+    if(m){
+      const round=Number(m[2]),reroll=Number(m[3]);if(round<1||round>9999||reroll>50)return false;
+      Object.assign(state,{seed:m[1],round,reroll,light:m[4],distance:m[5],difficulty:m[6]});
+      return true;
+    }
+    const sess=compact.match(/^PR2S-([A-HJ-NP-Z2-9]{6})-([MSOL])-([QNE])-([GBW])$/);
+    if(sess){Object.assign(state,{seed:sess[1],round:1,reroll:0,light:sess[2],distance:sess[3],difficulty:sess[4]});return true;}
+    return false;
+  }
+  try {const u=new URL(location.href); const m=u.searchParams.get('m'),ss=u.searchParams.get('s'); if(m)importMission(m);else if(ss)importMission(ss);} catch(e){}
+  function save(){try{localStorage.setItem(STORAGE,JSON.stringify(state));}catch(e){}}
+  const subjectEasy=[
+    'A single overlooked object that tells a story','A line, curve or shape that catches your attention','A natural detail smaller than your hand','The meeting point between nature and something human-made','Something showing age, wear or weathering','A subject people normally walk straight past','Something with a surprisingly interesting texture','A quiet moment with no obvious main attraction','A reflection, even a tiny one','A small contrast between two very different materials','The marks left behind by rain or wind','A piece of nature taking over a human-made object','An interesting detail on a bench, wall or path','A tiny patch of colour surrounded by neutral tones','A subject framed by two distant objects','Something growing where you did not expect it'
+  ];
+  const subjectBold=[
+    'Something that could look like a completely different place','An object that could be mistaken for abstract art','A detail that suggests a story without revealing it','An apparently boring subject made visually important','Something beautiful and something ugly in the same frame','A scene that feels like a still from an unexplained film','The smallest object in a much larger scene','An unusual shape made by three ordinary things','Evidence that somebody was here, without showing a person','A photograph of absence rather than presence','A subject that looks expensive but is not','A completely ordinary place made strangely unsettling','A scene that implies movement without capturing movement','An accidental portrait of the park itself','Two unrelated objects that seem to be talking','Something that might be overlooked for another hundred years','A photo that feels like the opening shot of a film'
+  ];
+  const compositionEasy=[
+    'Keep the subject away from the centre','Use something nearby as a natural frame','Include a leading line pointing toward your subject','Make the foreground noticeably important','Take the shot from waist height or lower','Give the subject plenty of negative space','Put only one obvious subject in the frame','Use a diagonal line somewhere in the composition','Use a repeating pattern','Make the background as important as the subject','Use a puddle or glass for framing if available','Shoot in portrait orientation only','Build a photograph using just two obvious shapes','Choose an unusually simple composition','Use a repeating foreground texture'
+  ];
+  const compositionBold=[
+    'At least half the photograph must be empty space','Make the main subject occupy less than a quarter of the frame','Frame the subject through two different layers','Make a recognisable object look nearly unrecognisable','Use strong symmetry, then deliberately break it','Shoot vertically as though designing a film poster','Make the subject nearly touch one edge of the frame','Tell the story with a shadow rather than the object','Use three distinct visual layers: front, middle and back','Build the image around a line that exits two sides of the frame','Your subject must be partially hidden','Make the foreground sharp and the distance soft, if possible','Compose using a reflection without showing its source','Make a silhouette without relying on a person','Use the camera angle to disguise a familiar object','Make the visual balance deliberately feel strange'
+  ];
+  const lightPrompts={
+    M:['Use whatever light exists; make it part of the story','Find a small area where light changes across a surface','Keep the brightest part of the scene deliberate','Choose either soft shadows or strong contrast','Use a shaded and an unshaded part of the scene','Find a patch of colour that stands out despite the lighting','Make the available light feel intentional'],
+    S:['Make a harsh shadow part of your composition','Expose for the highlights and let the shadows deepen','Find a subject lit from behind or the side','Photograph a pattern created by direct sunlight','Use shade as the main visual element','Find a boundary between bright sunlight and shade','Let backlight make a leaf or edge glow','Turn a bright surface into a graphic pattern'],
+    O:['Use soft light to reveal subtle textures','Let muted tones carry the photograph','Look for delicate reflections without harsh highlights','Create depth using objects rather than sunlight','Emphasise colour differences in the soft light','Include subtle greens without making them your main subject','Use a wet or reflective surface if available','Avoid dramatic contrast: find a gentle gradient'],
+    L:['Find the brightest available patch and use it intentionally','Silhouettes or dark shapes are allowed to dominate','Brace your camera and photograph a still subject','Use reflections or small pools of light','Let most of the photograph fall into shadow','Choose a stationary subject so you can use a slower shutter','Let one small highlight define the whole scene','Find a way to use grain or noise as part of the mood']
+  };
+  const twists=[
+    'No sky is allowed in the frame','The photograph must suggest a question','Use exactly one dominant colour','Your subject cannot be a flower, tree or building','Make the scene look older than it is','Do not use eye-level framing','Your image must feel unusually quiet','Try to hide the scale of the subject','Only one photograph: no second attempt','Use a deliberately unusual perspective','No obvious horizon or level straight lines','Aim for a magazine-cover composition','Photograph something you initially dislike','Include a surprising foreground obstruction','Make a pattern the main character','No bright colours in your final image','Show the same subject twice through reflection or repetition','Create a composition that feels almost symmetrical','Use only the bottom third of the scene','Include exactly three clear visual elements','Make nature look geometric','Use a deliberately unconventional crop'
+  ];
+  function buildMission(){
+    const moveRng=rngFrom('MOVE:'+state.seed+':'+state.round);
+    const photoRng=rngFrom('PHOTO:'+state.seed+':'+state.round+':'+state.reroll);
+    const range={Q:[13,48],N:[24,86],E:[49,140]}[state.distance];
+    const count=state.distance==='Q'?1:state.distance==='E'?(moveRng()>.52?3:2):(moveRng()>.48?2:1);
+    const angles=[0,15,30,45,60,75,90,120,135,150,180];
+    const legs=[];
+    for(let i=0;i<count;i++){
+      const angle=pick(angles,moveRng);const side=moveRng()>.5?'right':'left';
+      let dir=angle===0?'Continue on the path ahead':angle===180?'Turn around · 180°':`Angle ${angle}° ${side}`;
+      const detail=angle===0?'Keep your current direction.':angle===180?'Retrace the public path you just came from.':angle<=45?'A slight turn. Follow the closest public path.':angle<=90?'A medium-to-sharp turn. Use an available path.':'A wide turn. Choose the closest safe path, or continue ahead.';
+      legs.push({steps:randInt(range[0],range[1],moveRng),dir,detail});
+    }
+    const subjects=state.difficulty==='G'?subjectEasy:state.difficulty==='W'?subjectBold:[...subjectEasy,...subjectBold];
+    const comps=state.difficulty==='G'?compositionEasy:state.difficulty==='W'?compositionBold:[...compositionEasy,...compositionBold];
+    return {legs,subject:pick(subjects,photoRng),composition:pick(comps,photoRng),light:pick(lightPrompts[state.light],photoRng),twist:state.difficulty==='W'?pick(twists,photoRng):null};
+  }
+  let timerRemaining=180, timerEnd=0, timerActive=false, timerInterval=null, previousCode='';
+  const duration=()=>Number(state.minutes)*60;
+  const formatTime=s=>`${String(Math.floor(Math.max(0,s)/60)).padStart(2,'0')}:${String(Math.max(0,s)%60).padStart(2,'0')}`;
+  function renderClock(){qs('clock').textContent=formatTime(timerRemaining);qs('timerToggle').textContent=timerActive?'Pause':timerRemaining===0?'Restart':'Start';}
+  function resetTimer(){timerActive=false;timerEnd=0;timerRemaining=duration();renderClock();}
+  function updateTimer(){if(!timerActive)return;timerRemaining=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));renderClock();if(timerRemaining===0){timerActive=false;renderClock();notify('Time! Choose your shot.');}}
+  function node(tag,cls,content){const n=document.createElement(tag);if(cls)n.className=cls;if(content!==undefined)n.textContent=content;return n;}
+  function render(){
+    const code=missionCode(),m=buildMission();save();
+    qs('session').textContent=state.seed;
+    qs('completeCount').textContent=state.history.length;
+    qs('light').value=state.light;qs('distance').value=state.distance;qs('difficulty').value=state.difficulty;qs('timerMinutes').value=String(state.minutes);
+    qs('missionTitle').textContent='MISSION '+String(state.round).padStart(2,'0');
+    qs('missionTag').textContent=state.difficulty==='W'?'WILD CARD':'PHOTO CHALLENGE';
+    const moves=qs('movements');moves.replaceChildren();qs('totalSteps').textContent=m.legs.reduce((a,v)=>a+v.steps,0)+' total steps';
+    m.legs.forEach((leg,i)=>{let wrap=node('div','move');wrap.append(node('div','legnum',String(i+1).padStart(2,'0')));let inf=node('div');let h=node('div','stepline');h.textContent=String(leg.steps)+' ';h.append(node('span','', 'steps'));inf.append(h,node('div','dirline',leg.dir),node('p','micro',leg.detail));wrap.append(inf);moves.append(wrap);});
+    const limits=qs('limits');limits.replaceChildren();
+    [['SUBJECT',m.subject],['FRAME',m.composition],['LIGHT',m.light],...(m.twist?[['TWIST',m.twist]]:[])].forEach(([label,val])=>{const w=node('div','limit'+(label==='TWIST'?' bonus':''));w.append(node('div','title',label),node('div','value',val));limits.append(w);});
+    qs('missionCode').textContent=code;qs('sessionCode').textContent=sessionCode();qs('previous').disabled=state.round===1;
+    const done=state.history.some(h=>h.code===code);
+    qs('done').textContent=done?'✓ Already completed':'✓ Mark complete';qs('done').disabled=done;
+    qs('done').style.opacity=done?'.55':'1';
+    renderHistory();
+    if(code!==previousCode) {resetTimer(); previousCode=code;}
+    try {if(/^https?:$/.test(location.protocol)){const u=new URL(location.href);u.searchParams.delete('s');u.searchParams.set('m',code);history.replaceState(null,'',u.toString());}}catch(e){}
+  }
+  function renderHistory(){const ul=qs('history');ul.replaceChildren();if(!state.history.length){ul.append(node('li','subtle','No missions completed yet.'));return;}state.history.slice(0,12).forEach(h=>{const li=node('li');li.append(node('strong','',h.code),node('div','',h.date+' · '+h.subject));ul.append(li);});}
+  let toastTimeout=0;function notify(msg){qs('toast').textContent=msg;qs('toast').classList.add('on');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>qs('toast').classList.remove('on'),2300);}
+  async function copy(str){try {if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(str);return true;}}catch(e){}try{let ta=node('textarea');ta.value=str;ta.style.position='fixed';ta.style.opacity='0';document.body.append(ta);ta.select();let ok=document.execCommand('copy');ta.remove();return ok;}catch(e){return false;}}
+  function urlForMission(){if(!/^https?:$/.test(location.protocol))return null;const u=new URL(location.href);u.searchParams.delete('s');u.searchParams.set('m',missionCode());return u.toString();}
+  function urlForSession(){if(!/^https?:$/.test(location.protocol))return null;const u=new URL(location.href);u.searchParams.delete('m');u.searchParams.set('s',sessionCode());return u.toString();}
+  const shareText=()=>`Photo Roulette · Auckland Domain\nMission ${state.round}\nCode: ${missionCode()}${urlForMission()?'\n'+urlForMission():''}`;
+  qs('newMission').addEventListener('click',()=>{if(state.round===9999)return notify('Start a new session to keep going');state.round++;state.reroll=0;render();notify('New mission ready');});
+  qs('previous').addEventListener('click',()=>{if(state.round<=1)return;state.round--;state.reroll=0;render();notify('Previous mission');});
+  qs('reroll').addEventListener('click',()=>{state.reroll=(state.reroll+1)%51;render();notify('Same route, new photo restrictions');});
+  qs('done').addEventListener('click',()=>{const m=buildMission();const code=missionCode();if(state.history.some(h=>h.code===code))return;state.history.unshift({code,subject:m.subject,date:new Date().toLocaleString('en-NZ')});state.history=state.history.slice(0,40);render();notify('Mission completed ✓');});
+  qs('timerToggle').addEventListener('click',()=>{if(timerActive){timerRemaining=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));timerActive=false;}else{if(timerRemaining===0)timerRemaining=duration();timerEnd=Date.now()+timerRemaining*1000;timerActive=true;}renderClock();});
+  qs('timerReset').addEventListener('click',()=>resetTimer());
+  qs('timerMinutes').addEventListener('change',e=>{state.minutes=Number(e.target.value);resetTimer();save();});
+  for(const id of ['light','distance','difficulty'])qs(id).addEventListener('change',e=>{state[id]=e.target.value;render();notify('Challenge updated');});
+  qs('revealCode').addEventListener('click',()=>{qs('shareDetails').open=true;qs('shareDetails').scrollIntoView({behavior:'smooth',block:'start'});});
+  qs('copySession').addEventListener('click',async()=>notify(await copy(sessionCode())?'Session code copied':'Select and copy the session code'));
+  qs('shareSession').addEventListener('click',async()=>{const txt=`Photo Roulette · Let's play the same adventure!\nSession code: ${sessionCode()}${urlForSession()?'\n'+urlForSession():''}\nOpen the app, join this session, and then tap Next on your own phone for each matching round.`;if(navigator.share){try{await navigator.share({title:'Photo Roulette duo session',text:txt});return;}catch(e){if(e.name==='AbortError')return;}}notify(await copy(txt)?'Session invite copied':'Copy the session code above');});
+  qs('copyCode').addEventListener('click',async()=>notify(await copy(missionCode())?'Mission code copied':'Select and copy the code above'));
+  qs('copyLink').addEventListener('click',async()=>{const link=urlForMission();if(!link){notify('Host online for links. Copy the code instead.');return;}notify(await copy(link)?'Mission link copied':'Could not copy link');});
+  qs('share').addEventListener('click',async()=>{const txt=shareText();if(navigator.share){try{await navigator.share({title:'Photo Roulette mission',text:txt});return;}catch(e){if(e.name==='AbortError')return;}}notify(await copy(txt)?'Challenge copied to share':'Use the mission code under Play Together');});
+  qs('joinButton').addEventListener('click',()=>{const session=qs('joinCode').value.toUpperCase().trim().startsWith('PR2S');if(importMission(qs('joinCode').value)){qs('joinCode').value='';render();qs('shareDetails').open=false;window.scrollTo({top:0,behavior:'smooth'});notify(session?'Joined shared session · round 1':'Joined matching mission');}else notify('Invalid code — check and try again');});
+  qs('joinCode').addEventListener('keydown',e=>{if(e.key==='Enter')qs('joinButton').click();});
+  qs('freshSession').addEventListener('click',()=>{state.seed=newSeed();state.round=1;state.reroll=0;render();notify('New independent session started');});
+  qs('exportHistory').addEventListener('click',async()=>{const log=state.history.map((h,i)=>`${i+1}. ${h.date}\n${h.code}\n${h.subject}`).join('\n\n');notify(await copy(log||'No completed missions yet.')?'History copied':'Could not copy history');});
+  render();timerInterval=setInterval(updateTimer,250);document.addEventListener('visibilitychange',updateTimer);
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
+})();
+</script>
+</body>
+</html>
